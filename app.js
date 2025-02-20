@@ -34,18 +34,26 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var list = document.querySelector('#list');
+// 1 способ получения ссылок элементов из HTML
+var list = document.getElementById('list');
+// 2 способ получения ссылок элементов из HTML
 var filter = document.querySelector('#filter');
+//проверка на получение null, если null то выдавать сообщение
+if (!list || !filter) {
+    throw new Error('Элемент отсутствует');
+}
 var USERS = [];
 filter.addEventListener('input', function (event) {
-    // @ts-ignore
-    var value = event.target.value.toLowerCase();
+    //вывод отдельно момента, когда пользователь выбирает место, где писать текст + плюс точно говорю, что данное действие есть
+    var target = event.target;
+    // получение значения из строки поиска в нижнем регистре
+    var value = target.value.toLowerCase();
+    //
     var filteredUsers = USERS.filter(function (user) {
         return user.name.toLowerCase().includes(value);
     });
     render(filteredUsers);
 });
-// @ts-ignore
 function start() {
     return __awaiter(this, void 0, void 0, function () {
         var resp, data_1, err_1;
@@ -70,7 +78,10 @@ function start() {
                 case 4:
                     err_1 = _a.sent();
                     list.style.color = 'red';
-                    list.innerHTML = err_1.message;
+                    //если ошибка , то выдавать сообщение
+                    if (err_1 instanceof Error) {
+                        list.innerHTML = err_1.message;
+                    }
                     return [3 /*break*/, 5];
                 case 5: return [2 /*return*/];
             }
@@ -79,12 +90,15 @@ function start() {
 }
 function render(users) {
     if (users === void 0) { users = []; }
+    //проверка на пустой массив, если пуст то выдавать сообщение
     if (users.length === 0) {
         list.innerHTML = 'Ничего не найдено!';
     }
     else {
-        var html = users.map(toHTML).join('');
-        list.innerHTML = html;
+        //отображение списка пользователь
+        //html подсвечивалось желтым, избыточная константа, которая использовалась один раз.
+        //const html:string = users.map(toHTML).join('')
+        list.innerHTML = users.map(toHTML).join('');
     }
 }
 function toHTML(user) {
